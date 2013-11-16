@@ -9,6 +9,7 @@ urls = (
 )
 app = web.application(urls, globals())
 login = form.Form(
+#	form.label('SCG Order System'),
     form.Textbox('username'),
     form.Password('password'),
     form.Password('password_again'),

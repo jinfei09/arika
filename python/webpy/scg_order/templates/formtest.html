@@ -1,0 +1,9 @@
+$def with (form)
+
+<form name="main" method="post"> 
+
+$if not form.valid: <p class="error">Try again,Passwords didn't match:</p>
+<label>SCG Order System</label>
+$:form.render()
+<input type="submit" />   
+</form>
