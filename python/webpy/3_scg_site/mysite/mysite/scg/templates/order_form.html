@@ -1,0 +1,14 @@
+<html>
+<head>
+    <title>Search</title>
+</head>
+<body>
+	{% if error %}
+		****<p style="color: red;">Please input you itcode.</p>****
+	{% endif %}
+    <form action="/order/" method="get">
+        <input type="text" name="q">
+        <input type="submit" value="Order">
+    </form>
+</body>
+</html>

@@ -15,5 +15,6 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
     url(r'^scg/', 'mysite.scg.views.index'),
+    url(r'^order/$', 'mysite.scg.views.order'),
     url(r'^scglist/', 'mysite.scglist.views.index'),
 )
