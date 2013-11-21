@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<head>
+    <title>{{title}}</title>
+</head>
+<body>
+    <!--
+    -->
+    <h1>iiiiiiHello {{user.name}}</h1>
+    <li>age: {{user.age}}</li>
+    <li>sex: {{user.sex}}</li>
+    <li>sex: {{user.sex}}</li>
+    <div>the {{user.name}} say : {{user.say}} </div>
+    <li>{{book_list}}</li>
+    <li>{{book_list.0}}</li>
+    <li>{{book_list.1}}</li>
+    <li>{{book_list.2}}</li>
+    <li>{{book_list.3}}</li>
+{% if user%}
+    <li> name: {{user.name}}</li>
+{% else %}
+用户不存在
+{% endif %}
+
+{% for book in book_list%}
+<li>{{book}}</li>
+{% endfor %}
+
+{% for key,value in user.items %}  
+{{forloop.counter}}:{{key}}
+{% endfor %}
+
+</body>
+

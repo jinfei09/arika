@@ -1,0 +1,9 @@
+<html>
+<head>employee </head>
+<body>
+{% for emp in emps %}
+<div>{{forloop.counter}}:{{emp}}</div>
+{% endfor %}
+<div>共有 {{emps.count}} 记录 </div>
+</body>
+</html>
