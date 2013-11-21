@@ -1,0 +1,18 @@
+<html>
+	<head>SCG Order List</head>
+	<body>
+		<li>Hello SCG Order List</li>
+{{order_list}}
+{% for one in order_list %}
+    <table> {{forloop.counter}} |  {{one}} </table>
+{% endfor %}
+
+{{order_dict}}
+{{order_dict.age}}
+{{order_dict.name}}
+{% for key,value in order_dict.items %}
+    <h1>{{key}}</h1>
+	<h1> {{value}}</h1>
+{% endfor %}
+	</body>
+</html>
