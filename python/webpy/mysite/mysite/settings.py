@@ -1,6 +1,8 @@
 # Django settings for mysite project.
-import sys
-import os.path
+import os
+from local_settings import *
+
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -11,12 +13,10 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-PROJECT_ROOT = os.path.join(
-    os.path.realpath(os.path.dirname(__file__)), os.pardir)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': os.path.join(PROJECT_ROOT, 'mydb.db'),                      # Or path to database file if using sqlite3.
+        'NAME': os.path.join(BASE_DIR, 'scgdb.db'),                      # Or path to database file if using sqlite3.
         # The following settings are not used with sqlite3:
         'USER': '',
         'PASSWORD': '',
@@ -54,21 +54,23 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
+#MEDIA_ROOT = os.path.join(BASE_DIR, 'mysite/static')
 MEDIA_ROOT = ''
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://example.com/media/", "http://media.example.com/"
-MEDIA_URL = ''
+MEDIA_URL = os.path.join(BASE_DIR, 'mysite/static')
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = ''
+STATIC_ROOT = '/static/admin/'
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
+#STATIC_URL = '/static/'
 STATIC_URL = '/static/'
 
 # Additional locations of static files
@@ -76,6 +78,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    os.path.join(BASE_DIR, 'mysite/static'),
 )
 
 # List of finder classes that know how to find static files in
@@ -87,13 +90,13 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = 'oo6ud#p7x7l_&h-mzj6f*vh5!04im$n$=arxkzhlnd_3=vw1&7'
+SECRET_KEY = '(=^k9ztz2-3tugqut1s65qu6c&556ek2!*0$d=)^8j^0m!)58c'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -115,7 +118,8 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    './mysite/templates',
+	os.path.join(BASE_DIR, 'mysite/templates/classic'),
+	os.path.join(BASE_DIR, 'scgsite/templates'),
 )
 
 INSTALLED_APPS = (
@@ -129,7 +133,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
-    'mysite.address',
+	'scgsite',
 )
 
 # A sample logging configuration. The only tangible logging
