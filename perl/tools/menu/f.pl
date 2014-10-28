@@ -1,5 +1,6 @@
 #!/usr/bin/perl
 use strict;
+use Cwd;
 
 my $FLAG=shift;
 my $BusiNo=0;
@@ -7,6 +8,7 @@ my $FuncNo=0;
 my @Nr;
 my $g_title;
 my $g_filename;
+my $cwd=getcwd();
 
 sub GetFileNum()
 {
@@ -235,9 +237,9 @@ sub RunSubMenu()
 		my @t=split(/\./,$code);
 		my @x=split(/_/,@t[0]);
 		my @y=split(/_/,$file);
-		my $Dir=$ENV{"HOME"} . "/" ."trunk2.0" ."/" . "pack4rd" . "/"  . @y[0] . "/Server";
-		print $Dir,"\n°´CTL + C ·µ»Ø\n";
-		system("cd $Dir && vi trancfg4.txt");
+		my $Dir=$cwd . "/" ."menu_dat" ."/" . "menu_info" . "/";
+		print $Dir,"\n Enter CTL + C Back\n";
+		system("cd $Dir && vi info.txt");
 	}
 	if($key=~/^es$/)
 	{
