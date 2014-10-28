@@ -1,0 +1,267 @@
+#!/usr/bin/perl
+use strict;
+
+my $f=shift;
+my $code=shift;
+my $FLAG=shift;
+my @a=&myread($f);
+my %h=&GetDict1(@a);
+my %d=&GetDict(&myread("dict.txt"));
+#&PrintH(%h); exit;
+my @dd;
+my $buf="0123456789abcdefghijklmnopqrstuvwxyz"x30;
+
+my @x=split(/\//,$f);
+pop(@x);
+push(@x,"mn_" . $code . ".dat");
+my $f1=join("\/",@x);
+if($code eq "")
+{
+	&FenXiCfgFile(%h);
+}
+else
+{
+	print $code,$h{$code};
+	&FenXiOneCfg($code,$h{$code});
+}
+
+# input  $k=trancode, $v=cfg_one_tran
+sub FenXiOneCfg()
+{
+        my ($k,$v)=@_;
+	print "\n============== 识别串:$k ============== \n";
+	if($h{$k}=~/\[(\S+)\](.*)/)
+	{
+		print "规则分析：$1\n";
+		&FenXiGuiZe($1);
+		print "域分析：$2\n";
+		&FenXiField($2);
+	}
+}
+
+sub FenXiField()
+{
+	my $l=shift;
+	my @x=split(/;/,$l);
+	my $i=0;
+	foreach(@x) 
+	{
+		my @y=split(/:/,$_);
+		#print $i++ . ": " . $_,"\n";
+		print $i++ . ": ";
+		my $j=0;
+		my $n;
+		foreach $n(4,1,2,3,5,6)
+		{
+			my $s=@y[$n];
+			print &GetField($n,$s);
+		}
+		if($FLAG eq "1")
+		{
+			push(@dd,"\n# " . $d{@y[4]} . "  [" . @y[2] . "]\n" . @y[4] .  "=" . substr($buf,0,@y[2]));
+		}
+		else
+		{
+			push(@dd,"\n# " . $d{@y[4]}  . "  [" . @y[2] . "]\n" . @y[4] .  "=" );
+		}
+		if(@y[1] eq "R")
+		{
+			print "\n-------开始分析规则：$y[4] -------";
+			&FenXiOneCfg(@y[4],$h{@y[4]});
+			print "-------结束分析规则：$y[4] -------\n";
+		}
+
+	print " [$d{@y[4]}]\n";
+	}
+}
+
+&SaveFile($f1,@dd) unless(-f $f1);
+
+# n=field_no,  V=value
+sub GetField()
+{
+	my $n=shift;
+	my $v=shift;
+	my $s=<<heredoc;
+位元类型  无 0:定长 1:1位变长 2:2位变长 3:3位变长
+位元属性  无 D:赋固定值 M:赋默认值 C:表示判断域 c:与C相反的判断域，与保留域匹配上后走分支 R:表示是一个规则 L:单条明细长度域从保留域取 N:表示是一个明细个数域 0:其他
+域的长度  数字  0:其它
+补齐标志  无 1:字符型右补空格 2:数字型左补0 3:字符型左补空格 4:数值型或二进制块型左补0x00 5:字符型右补0x00 6:char型去左右空格后左补空格 7:char型，去左右空格后，右补空格 8:char型，去左右空格后，左补0
+字典名/规则名 值
+附加域	无 第2域为L则明细规则域长度“明细规则名_LEN”；第2域为N格式：“明细规则名_NUM”；为C或c则填写规则的名称； 第2域为D或M时，填写具体字符串值； 0:其它
+保留	无 第2域为C或c则是以‘|’分隔的字典值；(或) 第二域为L则是一个表示长度的字符串； 0:其他
+heredoc
+	my $r; #="$n=>";
+	my @d=split(/\n/,$s);
+	my @x=split(/\s+/,@d[$n]);   # 将每行以空格分隔 #$r .= @x[0] . ": ";
+	my $flag=0;
+	foreach(@x)
+	{
+		if($_=~/($v):(\S+)/)
+		{
+			$flag=1;
+			$r .= "$2";
+		}
+	}
+	$r . @x[1] if($flag==0);
+	$r ."$v : ";
+
+}
+
+
+
+
+
+# 分析一个文件cfg
+sub FenXiCfgFile()
+{
+        my %h=@_;
+        my ($k,$v);
+        foreach $k(sort keys(%h))
+        {
+		&FenXiOneCfg($k,$h{$k});
+        }
+}
+
+# n=field_no,  V=value
+sub GetGuiZe()
+{
+	my $n=shift;
+	my $v=shift;
+	my $s=<<heredoc;
+规则类别 P:普通报文 M:明细规则
+规则内属性 F:定变长 T:分隔符 D:其它
+规则内分隔符 D:规则内分隔符ASCII值 N:其他
+规则间分隔符ASCII值 无 #第1域为M的: 本域填写本条明细与下条明细之间的分隔符ASCII值 对于定长报文，这里设置为报文定长部分和其他部分的分隔符ASCII值 N:其他
+首尾分隔符  1:有首无尾 2:有首有尾 3:无首无尾 4:无首有尾 0:其他（定长报文）
+报文结束符 D:填写结束符ASCII码值 N:不使用
+heredoc
+	my $r="No:$n ";
+	my @d=split(/\n/,$s);
+	my @x=split(/\s+/,@d[$n]);   # 将每行以空格分隔
+	$r .= @x[0] . ": ";
+	foreach(@x)
+	{
+		if($_=~/($v)/)
+		{
+			$r .= "$_";
+		}
+	}
+	$r . " V:$v\n";
+
+}
+
+sub FenXiGuiZe()
+{
+	my $v=shift;
+	my @x=split(/:/,$v);
+	my $i=0;
+	foreach(@x)
+	{
+		print &GetGuiZe($i++,$_);
+	}
+
+}
+exit;
+my @y;
+my $s;
+foreach(@a)
+{
+	print $_;
+	my @x=split(/,/,$_);
+	# 字典名
+	#my $s=join(",",(@x[0] . @a[0] . @b[0] . "_" . @x[6],  @x[7],  @x[2]."_".@x[9],  @x[9],@a[0],@a[1]."_".@x[4]."_".@x[3], @x[2], @x[10],@x[11]));
+	# AAAGAA_FFYHM,60,0_Out,Out,AA,移动_欠费查询,0,,
+	push(@y,$s);
+}
+&SaveFile("r.txt",@y);
+
+# Get A line From Array With TranCode
+sub GetRule()
+{
+        my $code=shift;
+        foreach(@_)
+        {
+                return $_ if($_=~/$code/);
+        }
+        return "Not Found!";
+}
+
+# Put Array split with "=" into Hash
+sub GetDict()
+{
+        my %h;
+        foreach(@_)
+        {
+                my @t=split(/=/,$_);
+                $h{@t[0]}=@t[1];
+        }
+        return %h;
+}
+
+# Put Array split with "=" into Hash
+sub GetDict1()
+{
+        my %h;
+        foreach(@_)
+        {
+                my @t=split(/=/,$_);
+                $h{@t[0]}=@t[1];
+        }
+        return %h;
+}
+
+# Print Hash
+sub PrintH()
+{
+        my %h=@_;
+        my ($k,$v);
+        while(($k,$v)=each(%h))
+        {
+                print "$k=>$v\n";
+        }
+
+}
+
+
+sub PrintA()
+{
+	foreach(@_)
+	{
+		print $_,"\n";
+	}
+}
+
+sub SaveFile()
+{
+  my $f1=shift;
+  open(FILE,">$f1")||die "Could not open $f1:$!";
+  foreach(@_) {
+      print FILE "$_\n" if(length($_)>0);
+  }
+  close(FILE);
+}
+
+sub myread{
+    my $file=shift;
+    open(File,"<$file")||die "can not open $file: $!";
+    my @fields=grep(!/^#/,<File>);
+    chop(@fields);
+    @fields;
+}
+
+sub GetNr()
+{
+    my @d=grep(!/=/,@_);
+    @d;
+}
+
+sub GetCfg()
+{
+      my $Name=shift;
+      my @d=grep(/$Name=/,@_);
+      substr($d[0],length($Name)+1);
+}
+
+print "Good Bye!\n";
+

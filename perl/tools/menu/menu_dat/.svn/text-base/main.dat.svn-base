@@ -1,0 +1,33 @@
+LEFT=1
+TITLE=模拟第三方（档板程序)
+ATAD_沈阳电信|tcp同短|DB
+ATAE_沈阳电费|tcp同短|DB+FG OKf
+ATAB_沈阳联通|tcp同短|DB
+ATAA_沈阳移动|tcp同短|FG
+ATAZ_沈阳煤气|tcp同短|DB
+ATAC_沈阳联通固话|TUXE|DB
+ATAI_沈阳公交IC卡|tcp异长|DB
+ATBA_沈阳校园卡|tcp同短|DB
+AUAF_成都水费|tcp同短|DB
+AUAD_成都电信|TUXE|FML32
+ARAA_大连移动|MQ|8583
+ARAB_大连联通|tcp同短|DB
+ARAC_大连联通固话|TUXE|DB
+ARBE_大连联合收费|tcp同短|8583
+ARAD_大连电信|tcp同短|DB
+AQAA_上海移动|tcp同短|DB
+AQBF_上海银彩通业务|tcp同短|FG
+AQBH_上海证券资金(PROP)|tong|DB OKf
+ASAD_重庆电信|tcp同短|DB
+ASAA_重庆移动|tcp同短|DB
+ASAB_重庆联通|tcp同短|DB
+ASBD_重庆五行(西安)|tcp异短|8583
+APAB_太原联通|tcp同短|DB
+APAA_太原移动|tcp异短|DB
+APBB_太原公积金批量代扣|tcp|DB
+APBJ_太原见费出单|tong|DB
+APAM_太原财政支付|tcp同短|FG
+ACAN_南京商品房|tcp同短|DB
+AWAL_南京江苏非税(新)|MQ|XML
+ANAN_青岛商品房|tcp同短|XML
+ASBI_重庆分行体彩项目|http|XML

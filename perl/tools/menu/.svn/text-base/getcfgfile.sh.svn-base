@@ -1,0 +1,1 @@
+find $HOME -name "trancfg.txt"|xargs grep "="|tr '=' ' '|grep "\[P:[FT]:"|tr ':' ' '|awk '{print $1}'|sort |uniq  > menu_dat/main.dat
